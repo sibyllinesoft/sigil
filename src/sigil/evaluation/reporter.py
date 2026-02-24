@@ -51,19 +51,21 @@ class Reporter:
             f"  Detection Rate:          {overall.detection_rate:.1%}",
             f"  False Positive Rate:     {overall.false_positive_rate:.1%}",
             f"  Attack Success Rate:     {overall.attack_success_rate:.1%}",
-            f"  Propagation Rate:        {overall.propagation_rate:.1%}",
+            f"  Propagation Contained:   {overall.propagation_contained_rate:.1%}",
+            f"  Propagation Escaped:     {overall.propagation_escaped_rate:.1%}",
             f"  Protocol Compliance:     {overall.protocol_compliance_rate:.1%}",
             "",
             "-" * 80,
-            f"{'Protocol':<18} {'Detect%':>8} {'FP%':>6} {'ASR%':>6} {'Prop%':>6} {'Comply%':>8}",
+            f"{'Protocol':<18} {'Detect%':>8} {'FP%':>6} {'ASR%':>6} {'Cont%':>6} {'Esc%':>6} {'Comply%':>8}",
             "-" * 80,
         ]
 
         for name, m in sorted(by_protocol.items()):
-            prop = f"{m.propagation_rate:>5.1%}" if m.total_propagation_trials else "  n/a"
+            cont = f"{m.propagation_contained_rate:>5.1%}" if m.total_propagation_trials else "  n/a"
+            esc = f"{m.propagation_escaped_rate:>5.1%}" if m.total_propagation_trials else "  n/a"
             lines.append(
                 f"{name:<18} {m.detection_rate:>7.1%} {m.false_positive_rate:>5.1%} "
-                f"{m.attack_success_rate:>5.1%} {prop:>6} {m.protocol_compliance_rate:>7.1%}"
+                f"{m.attack_success_rate:>5.1%} {cont:>6} {esc:>6} {m.protocol_compliance_rate:>7.1%}"
             )
 
         lines.append("-" * 80)
@@ -89,7 +91,8 @@ class Reporter:
                     "protocol_passed": r.protocol_passed,
                     "violations": r.violations,
                     "attack_succeeded": r.attack_succeeded,
-                    "propagation_detected": r.propagation_detected,
+                    "propagation_contained": r.propagation_contained,
+                    "propagation_escaped": r.propagation_escaped,
                     "raw_response": r.raw_response,
                     "error": r.error,
                 }
